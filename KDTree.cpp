@@ -247,8 +247,8 @@ pointIndex KDTree::nearest_pointIndex(const point_t &pt) {
 pointIndexArr KDTree::neighborhood_(  //
     const KDNodePtr &branch,          //
     const point_t &pt,                //
-    const double &rad,                //
-    const size_t &level               //
+    const size_t &level,               //
+    pointIndexArr &nbh                //
 ) {
     double d, dx, dx2;
 
@@ -260,15 +260,15 @@ pointIndexArr KDTree::neighborhood_(  //
 
     size_t dim = pt.size();
 
-    double r2 = rad * rad;
+    //double r2 = rad * rad;
 
     d = dist2(point_t(*branch), pt);
     dx = point_t(*branch).at(level) - pt.at(level);
     dx2 = dx * dx;
 
-    pointIndexArr nbh, nbh_s, nbh_o;
+    //pointIndexArr nbh, nbh_s, nbh_o;
     if (d <= r2) {
-        nbh.push_back(pointIndex(*branch));
+      nbh.push_back(pointIndex(*branch));
     }
 
     //
@@ -282,28 +282,25 @@ pointIndexArr KDTree::neighborhood_(  //
         other = branch->left;
     }
 
-    nbh_s = neighborhood_(section, pt, rad, (level + 1) % dim);
-    nbh.insert(nbh.end(), nbh_s.begin(), nbh_s.end());
+    neighborhood_(section, pt, (level + 1) % dim, nbh);
     if (dx2 < r2) {
-        nbh_o = neighborhood_(other, pt, rad, (level + 1) % dim);
-        nbh.insert(nbh.end(), nbh_o.begin(), nbh_o.end());
+      neighborhood_(other, pt, (level + 1) % dim, nbh);
     }
-
-    return nbh;
 };
 
 pointIndexArr KDTree::neighborhood(  //
-    const point_t &pt,               //
-    const double &rad) {
+    const point_t &pt) {
     size_t level = 0;
-    return neighborhood_(root, pt, rad, level);
+    pointIndexArr nbh;    
+    neighborhood_(root, pt, level, nbh);
+    return nbh;
 }
 
 pointVec KDTree::neighborhood_points(  //
-    const point_t &pt,                 //
-    const double &rad) {
+    const point_t &pt) {
     size_t level = 0;
-    pointIndexArr nbh = neighborhood_(root, pt, rad, level);
+    pointIndexArr nbh;
+    neighborhood_(root, pt, level, nbh);
     pointVec nbhp;
     nbhp.resize(nbh.size());
     std::transform(nbh.begin(), nbh.end(), nbhp.begin(),
@@ -312,10 +309,10 @@ pointVec KDTree::neighborhood_points(  //
 }
 
 indexArr KDTree::neighborhood_indices(  //
-    const point_t &pt,                  //
-    const double &rad) {
+    const point_t &pt) {
     size_t level = 0;
-    pointIndexArr nbh = neighborhood_(root, pt, rad, level);
+    pointIndexArr nbh; 
+    neighborhood_(root, pt, level, nbh);
     indexArr nbhi;
     nbhi.resize(nbh.size());
     std::transform(nbh.begin(), nbh.end(), nbhi.begin(),

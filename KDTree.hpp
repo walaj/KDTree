@@ -90,7 +90,10 @@ class KDTree {
     KDTree() = default;
     explicit KDTree(pointVec point_array);
 
-   private:
+  double rad = 0;
+  double r2 = 0;
+  
+  private:
     KDNodePtr nearest_(           //
         const KDNodePtr &branch,  //
         const point_t &pt,        //
@@ -111,20 +114,17 @@ class KDTree {
     pointIndexArr neighborhood_(  //
         const KDNodePtr &branch,  //
         const point_t &pt,        //
-        const double &rad,        //
-        const size_t &level       //
+        const size_t &level,       //
+	pointIndexArr& nbh
     );
 
    public:
     pointIndexArr neighborhood(  //
-        const point_t &pt,       //
-        const double &rad);
+        const point_t &pt);
 
     pointVec neighborhood_points(  //
-        const point_t &pt,         //
-        const double &rad);
+        const point_t &pt);
 
     indexArr neighborhood_indices(  //
-        const point_t &pt,          //
-        const double &rad);
+        const point_t &pt);
 };
