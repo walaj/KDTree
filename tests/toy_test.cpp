@@ -66,9 +66,7 @@ int main() {
     pt = {.0, .5};
 
     */
-    tree.rad = .55;
-    tree.rad = .55*.55;
-    auto res2 = tree.neighborhood_points(pt);
+    auto res2 = tree.neighborhood_points(pt, 0.55);
 
     for (point_t a : res2) {
         for (double b : a) {
