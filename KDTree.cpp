@@ -11,16 +11,6 @@
  *
  */
 
-#include <algorithm>
-#include <cmath>
-#include <functional>
-#include <iterator>
-#include <limits>
-#include <memory>
-#include <vector>
-
-#include "KDTree.hpp"
-
 KDNode::KDNode() = default;
 
 KDNode::KDNode(const point_t &pt, const size_t &idx_, const KDNodePtr &left_,
